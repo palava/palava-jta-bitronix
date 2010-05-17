@@ -19,6 +19,7 @@ package de.cosmocode.palava.jta.bitronix;
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.Configuration;
 import bitronix.tm.TransactionManagerServices;
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import de.cosmocode.palava.core.lifecycle.Disposable;
 import de.cosmocode.palava.core.lifecycle.Initializable;
@@ -44,6 +45,7 @@ class BitronixJtaProvider implements JtaProvider, Initializable, Disposable {
 
 	private BitronixTransactionManager btm;
 
+    @Inject
 	public BitronixJtaProvider(@Named(BitronixJtaConfig.JOURNAL1) File journal1, @Named(BitronixJtaConfig.JOURNAL2) File journal2) {
 		this.journal1 = journal1.getAbsoluteFile();
 		this.journal2 = journal2.getAbsoluteFile();
