@@ -25,6 +25,8 @@ public class BitronixJtaConfig {
 
 	public static final String PREFIX = JtaConfig.PREFIX + "bitronix.";
 
+    public static final String ENVIRONMENT = PREFIX + "environment";
+
 	public static final String JOURNAL1 = PREFIX + "journal1";
 	public static final String JOURNAL2 = PREFIX + "journal2";
 
