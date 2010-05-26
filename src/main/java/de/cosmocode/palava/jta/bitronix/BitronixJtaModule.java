@@ -21,11 +21,15 @@ import com.google.inject.Module;
 import de.cosmocode.palava.jta.JtaProvider;
 
 /**
+ * Binds {@link JtaProvider} to {@link BitronixJtaProvider}.
+ * 
  * @author Tobias Sarnowski
  */
 public class BitronixJtaModule implements Module {
-	@Override
-	public void configure(Binder binder) {
-		binder.bind(JtaProvider.class).to(BitronixJtaProvider.class).asEagerSingleton();
-	}
+    
+    @Override
+    public void configure(Binder binder) {
+        binder.bind(JtaProvider.class).to(BitronixJtaProvider.class).asEagerSingleton();
+    }
 }
+

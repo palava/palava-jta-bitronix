@@ -36,70 +36,75 @@ import javax.transaction.UserTransaction;
 import java.io.File;
 
 /**
+ * Bitronix {@link JtaProvider} implementation.
+ * 
  * @author Tobias Sarnowski
  */
 class BitronixJtaProvider implements JtaProvider, Initializable, Disposable {
-	private static final Logger LOG = LoggerFactory.getLogger(BitronixJtaProvider.class);
+    
+    private static final Logger LOG = LoggerFactory.getLogger(BitronixJtaProvider.class);
 
-	private final File journal1;
-	private final File journal2;
+    private final File journal1;
+    private final File journal2;
 
-	private BitronixTransactionManager btm;
+    private BitronixTransactionManager btm;
     private String environment;
 
     @Inject
-	public BitronixJtaProvider(@PalavaEnvironment String environment,
-                            @Named(BitronixJtaConfig.JOURNAL1) File journal1,
-                            @Named(BitronixJtaConfig.JOURNAL2) File journal2) {
+    public BitronixJtaProvider(
+        @PalavaEnvironment String environment,
+        @Named(BitronixJtaConfig.JOURNAL1) File journal1,
+        @Named(BitronixJtaConfig.JOURNAL2) File journal2) {
         this.environment = environment;
         this.journal1 = journal1.getAbsoluteFile();
-		this.journal2 = journal2.getAbsoluteFile();
-	}
+        this.journal2 = journal2.getAbsoluteFile();
+    }
 
     @Inject(optional = true)
-    public void setEnvironment(@Named(BitronixJtaConfig.ENVIRONMENT) String environment) {
+    void setEnvironment(@Named(BitronixJtaConfig.ENVIRONMENT) String environment) {
         this.environment = environment;
     }
 
-	@Override
-	public void initialize() throws LifecycleException {
-		LOG.debug("Configuring Bitronix JTA provider...");
-		final Configuration configuration = TransactionManagerServices.getConfiguration();
+    @Override
+    public void initialize() throws LifecycleException {
+        LOG.debug("Configuring Bitronix JTA provider...");
+        final Configuration configuration = TransactionManagerServices.getConfiguration();
 
         LOG.debug("Bitronix ID: {}", environment);        
         configuration.setServerId(environment);
 
-		LOG.debug("Journal 1: {}", journal1);
-		configuration.setLogPart1Filename(journal1.toString());
-		LOG.debug("Journal 2: {}", journal2);
-		configuration.setLogPart2Filename(journal2.toString());
+        LOG.debug("Journal 1: {}", journal1);
+        configuration.setLogPart1Filename(journal1.toString());
+        LOG.debug("Journal 2: {}", journal2);
+        configuration.setLogPart2Filename(journal2.toString());
 
         configuration.setDisableJmx(false);
 
-		btm = TransactionManagerServices.getTransactionManager();
+        btm = TransactionManagerServices.getTransactionManager();
 
-		try {
-			LOG.info("Starting Bitronix JTA provider as '{}'", configuration.getServerId());
-			btm.begin();
-		} catch (NotSupportedException e) {
-			throw new LifecycleException(e);
-		} catch (SystemException e) {
-			throw new LifecycleException(e);
-		}
-	}
+        try {
+            LOG.info("Starting Bitronix JTA provider as '{}'", configuration.getServerId());
+            btm.begin();
+        } catch (NotSupportedException e) {
+            throw new LifecycleException(e);
+        } catch (SystemException e) {
+            throw new LifecycleException(e);
+        }
+    }
 
-	@Override
-	public void dispose() throws LifecycleException {
-		btm.shutdown();
-	}
+    @Override
+    public TransactionManager getTransactionManager() {
+        return btm;
+    }
 
-	@Override
-	public TransactionManager getTransactionManager() {
-		return btm;
-	}
+    @Override
+    public UserTransaction getUserTransaction() {
+        return btm;
+    }
 
-	@Override
-	public UserTransaction getUserTransaction() {
-		return btm;
-	}
+    @Override
+    public void dispose() throws LifecycleException {
+        btm.shutdown();
+    }
+    
 }
