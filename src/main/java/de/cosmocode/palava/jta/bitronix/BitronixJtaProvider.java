@@ -16,24 +16,28 @@
 
 package de.cosmocode.palava.jta.bitronix;
 
-import bitronix.tm.BitronixTransactionManager;
-import bitronix.tm.Configuration;
-import bitronix.tm.TransactionManagerServices;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import de.cosmocode.palava.core.inject.PalavaEnvironment;
-import de.cosmocode.palava.core.lifecycle.Disposable;
-import de.cosmocode.palava.core.lifecycle.Initializable;
-import de.cosmocode.palava.core.lifecycle.LifecycleException;
-import de.cosmocode.palava.jta.JtaProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
 
 import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
-import java.io.File;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import bitronix.tm.BitronixTransactionManager;
+import bitronix.tm.Configuration;
+import bitronix.tm.TransactionManagerServices;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import de.cosmocode.palava.core.inject.PalavaEnvironment;
+import de.cosmocode.palava.core.lifecycle.Disposable;
+import de.cosmocode.palava.core.lifecycle.Initializable;
+import de.cosmocode.palava.core.lifecycle.LifecycleException;
+import de.cosmocode.palava.jta.JtaProvider;
 
 /**
  * Bitronix {@link JtaProvider} implementation.
